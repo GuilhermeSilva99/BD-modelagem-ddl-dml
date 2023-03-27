@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="ecommerce-turma-926" id="Project-850" database="PostgreSQL" >
+	<schema name="ecommerce-turma-926" >
+		<table name="cliente" prior="tbl" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="nome" type="varchar" length="895" jt="12" mandatory="y" />
+			<column name="cpf" type="char" length="11" jt="1" mandatory="y" />
+			<column name="id_endereco" prior="endereco" type="integer" length="1000" jt="4" mandatory="y" />
+			<index name="unq_cliente_cpf" unique="UNIQUE_KEY" >
+				<column name="cpf" />
+			</index>
+			<index name="pk_cliente" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_cliente" unique="UNIQUE_KEY" >
+				<column name="id_endereco" />
+			</index>
+			<fk name="fk_cliente_endereco" to_schema="ecommerce-turma-926" to_table="endereco" >
+				<fk_column name="id_endereco" pk="id" />
+			</fk>
+		</table>
+		<table name="cupom" prior="tbl" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="data_inicio" type="timestamp" jt="93" mandatory="y" />
+			<column name="data_expiracao" type="timestamp" jt="93" mandatory="y" />
+			<column name="valor" type="numeric" jt="2" mandatory="y" />
+			<column name="descricao" type="varchar" length="1000" jt="12" mandatory="y" />
+			<index name="pk_cupom" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="endereco" prior="tbl" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="cep" type="char" length="8" jt="1" mandatory="y" />
+			<column name="logadouro" type="varchar" length="1000" jt="12" mandatory="y" />
+			<column name="numero" type="varchar" length="30" jt="12" mandatory="y" />
+			<column name="cidade" type="varchar" length="200" jt="12" mandatory="y" />
+			<column name="uf" type="char" length="2" jt="1" mandatory="y" />
+			<index name="pk_endereco" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="estoque" prior="tbl" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="id_endereco" type="integer" jt="4" mandatory="y" />
+			<index name="pk_estoque" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_estoque" unique="UNIQUE_KEY" >
+				<column name="id_endereco" />
+			</index>
+			<fk name="fk_estoque_endereco" to_schema="ecommerce-turma-926" to_table="endereco" >
+				<fk_column name="id_endereco" pk="id" />
+			</fk>
+		</table>
+		<table name="fornecedor" prior="tbl" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="nome" type="varchar" length="895" jt="12" mandatory="y" />
+			<column name="cnpj" type="char" length="14" jt="1" mandatory="y" />
+			<column name="id_endereco" type="integer" jt="4" mandatory="y" />
+			<index name="pk_fornecedor" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_fornecedor_cpnj" unique="UNIQUE_KEY" >
+				<column name="cnpj" />
+			</index>
+			<index name="unq_fornecedor_id_endereco" unique="UNIQUE_KEY" >
+				<column name="id_endereco" />
+			</index>
+			<fk name="fk_fornecedor_endereco" to_schema="ecommerce-turma-926" to_table="endereco" >
+				<fk_column name="id_endereco" pk="id" />
+			</fk>
+		</table>
+		<table name="item_pedido" prior="item" >
+			<column name="id_pedido" type="integer" jt="4" mandatory="y" />
+			<column name="id_produto" type="integer" jt="4" mandatory="y" />
+			<column name="quantidade" type="integer" jt="4" mandatory="y" />
+			<column name="valor" type="numeric" jt="2" mandatory="y" />
+			<index name="pk_item_pedido" unique="PRIMARY_KEY" >
+				<column name="id_pedido" />
+				<column name="id_produto" />
+			</index>
+			<fk name="fk_item_pedido_pedido" to_schema="ecommerce-turma-926" to_table="pedido" delete_action="cascade" >
+				<fk_column name="id_pedido" pk="id" />
+			</fk>
+			<fk name="fk_item_pedido_produto" to_schema="ecommerce-turma-926" to_table="produto" >
+				<fk_column name="id_produto" pk="id" />
+			</fk>
+		</table>
+		<table name="pedido" prior="tbl" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="previsao_entrega" type="date" jt="91" mandatory="y" />
+			<column name="meio_pagamento" type="varchar" length="200" jt="12" mandatory="y" />
+			<column name="status" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="id_cliente" type="integer" jt="4" mandatory="y" />
+			<column name="data_criacao" type="timestamp" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<column name="id_cupom" type="integer" jt="4" mandatory="y" />
+			<index name="pk_pedido" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_pedido" unique="UNIQUE_KEY" >
+				<column name="id_cupom" />
+			</index>
+			<fk name="fk_pedido_cliente" to_schema="ecommerce-turma-926" to_table="cliente" >
+				<fk_column name="id_cliente" pk="id" />
+			</fk>
+			<fk name="fk_pedido_cupom" to_schema="ecommerce-turma-926" to_table="cupom" >
+				<fk_column name="id_cupom" pk="id" />
+			</fk>
+		</table>
+		<table name="produto" prior="prod" >
+			<column name="id" type="serial" jt="4" mandatory="y" />
+			<column name="descricao" type="varchar" length="1000" jt="12" mandatory="y" />
+			<column name="codigo_barras" type="varchar" length="44" jt="12" mandatory="y" />
+			<column name="valor" type="numeric" jt="2" mandatory="y" />
+			<column name="id_fornecedor" type="integer" jt="4" mandatory="y" />
+			<index name="pk_produto" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_produto_codigo_barras" unique="UNIQUE_KEY" >
+				<column name="codigo_barras" />
+			</index>
+			<index name="unq_produto_id_fornecedor" unique="UNIQUE_KEY" >
+				<column name="id_fornecedor" />
+			</index>
+			<fk name="fk_produto_fornecedor" to_schema="ecommerce-turma-926" to_table="fornecedor" >
+				<fk_column name="id_fornecedor" pk="id" />
+			</fk>
+		</table>
+		<table name="produto_estoque" prior="tbl_0" >
+			<column name="id_estoque" type="integer" jt="4" mandatory="y" />
+			<column name="id_produto" type="integer" jt="4" mandatory="y" />
+			<column name="quantidade" type="integer" jt="4" mandatory="y" />
+			<index name="pk_produto_estoque" unique="PRIMARY_KEY" >
+				<column name="id_estoque" />
+				<column name="id_produto" />
+			</index>
+			<fk name="fk_produto_estoque_estoque" to_schema="ecommerce-turma-926" to_table="estoque" >
+				<fk_column name="id_estoque" pk="id" />
+			</fk>
+			<fk name="fk_produto_estoque_produto" to_schema="ecommerce-turma-926" to_table="produto" >
+				<fk_column name="id_produto" pk="id" />
+			</fk>
+		</table>
+		<table name="tbl" />
+	</schema>
+	<connector name="MyDb" database="MySql" host="localhost" port="3306" user="root" useSystemProxy="false" />
+	<layout name="Default Layout" id="Layout-7a5" show_column_type="y" show_relation="columns" >
+		<entity schema="ecommerce-turma-926" name="cliente" color="3986C1" x="240" y="176" />
+		<entity schema="ecommerce-turma-926" name="cupom" color="C1D8EE" x="1024" y="192" />
+		<entity schema="ecommerce-turma-926" name="endereco" color="C1D8EE" x="176" y="432" />
+		<entity schema="ecommerce-turma-926" name="estoque" color="C1D8EE" x="144" y="928" />
+		<entity schema="ecommerce-turma-926" name="fornecedor" color="C1D8EE" x="288" y="752" />
+		<entity schema="ecommerce-turma-926" name="item_pedido" color="C1D8EE" x="608" y="464" />
+		<entity schema="ecommerce-turma-926" name="pedido" color="C1D8EE" x="640" y="192" />
+		<entity schema="ecommerce-turma-926" name="produto" color="C1D8EE" x="624" y="752" />
+		<entity schema="ecommerce-turma-926" name="produto_estoque" color="C1D8EE" x="1088" y="752" />
+		<callout x="48" y="48" pointer="Round" >
+			<comment><![CDATA[This is a layout - a diagram with tools.
+- Right-click the layout to create new tables. 
+- Double-click table headers to edit. 
+- For a better understanding of the schema, create multiple layouts.
+- The schema will be saved to the model file. 
+- Later, you can connect to any database and deploy the schema into the database.]]></comment>
+		</callout>
+		<script name="cupom" id="Editor-1a10" language="SQL" >
+			<string><![CDATA[CREATE  TABLE cupom ( 
+	id                   serial  NOT NULL  ,
+	data_inicio          timestamp  NOT NULL  ,
+	data_expiracao       timestamp  NOT NULL  ,
+	valor                numeric  NOT NULL  ,
+	descricao            varchar(1000)  NOT NULL  ,
+	CONSTRAINT pk_cupom PRIMARY KEY ( id )
+ );
+]]></string>
+		</script>
+		<script name="estoque" id="Editor-edc" language="SQL" >
+			<string><![CDATA[CREATE  TABLE "ecommerce-turma-926".estoque ( 
+	id                   serial  NOT NULL  ,
+	id_endereco          integer  NOT NULL  ,
+	CONSTRAINT pk_estoque PRIMARY KEY ( id ),
+	CONSTRAINT idx_estoque UNIQUE ( id_endereco ) 
+ );
+
+ALTER TABLE "ecommerce-turma-926".estoque ADD CONSTRAINT fk_estoque_endereco FOREIGN KEY ( id_endereco ) REFERENCES "ecommerce-turma-926".endereco( id );
+]]></string>
+		</script>
+		<script name="fornecedor" id="Editor-24ee" language="SQL" >
+			<string><![CDATA[CREATE  TABLE "ecommerce-turma-926".fornecedor ( 
+	id                   serial  NOT NULL  ,
+	nome                 varchar(895)  NOT NULL  ,
+	cnpj                 char(14)  NOT NULL  ,
+	id_endereco          integer  NOT NULL  ,
+	CONSTRAINT pk_fornecedor PRIMARY KEY ( id ),
+	CONSTRAINT unq_fornecedor_cpnj UNIQUE ( cnpj ) ,
+	CONSTRAINT unq_fornecedor_id_endereco UNIQUE ( id_endereco ) 
+ );
+
+ALTER TABLE "ecommerce-turma-926".fornecedor ADD CONSTRAINT fk_fornecedor_endereco FOREIGN KEY ( id_endereco ) REFERENCES "ecommerce-turma-926".endereco( id );
+]]></string>
+		</script>
+		<script name="produto_estoque" id="Editor-14b1" language="SQL" >
+			<string><![CDATA[CREATE  TABLE "ecommerce-turma-926".produto_estoque ( 
+	id_estoque           integer  NOT NULL  ,
+	id_produto           integer  NOT NULL  ,
+	quantidade           integer  NOT NULL  ,
+	CONSTRAINT pk_produto_estoque PRIMARY KEY ( id_estoque, id_produto )
+ );
+
+ALTER TABLE "ecommerce-turma-926".produto_estoque ADD CONSTRAINT fk_produto_estoque_estoque FOREIGN KEY ( id_estoque ) REFERENCES "ecommerce-turma-926".estoque( id );
+
+ALTER TABLE "ecommerce-turma-926".produto_estoque ADD CONSTRAINT fk_produto_estoque_produto FOREIGN KEY ( id_produto ) REFERENCES "ecommerce-turma-926".produto( id );
+]]></string>
+		</script>
+		<browser id="Browse-1a5a" name="fk_cliente_endereco" confirm_updates="y" confirmed="y" >
+			<browse_table schema="ecommerce-turma-926" entity="endereco" x="20" y="20" width="400" height="300" >
+				<browse_table schema="ecommerce-turma-926" entity="cliente" fk="fk_cliente_endereco" x="460" y="20" width="500" height="350" />
+			</browse_table>
+		</browser>
+	</layout>
+</project>
