@@ -1,7 +1,8 @@
 -- DDL -- data definition language
 
-
 create schema ecommerce926;
+
+set search_path to ecommerce926;
 
 create table produto(
 	id serial,
@@ -14,9 +15,6 @@ alter table produto add constraint pk_produto primary key(id);
 
 alter table produto add constraint 
 	uk_produto_codigo_barras unique(codigo_barras);
-
-
-drop table endereco;
 
 create table endereco(
 	id serial,
@@ -71,46 +69,46 @@ create table item_pedido(
     foreign key(id_produto) references produto
 );
 
-create TABLE cupom ( 
+create table cupom ( 
 	id serial not null,
 	data_inicio timestamp not null,
 	data_expiracao timestamp not null,
 	valor numeric not null,
 	descricao varchar(1000) not null,
-	CONSTRAINT pk_cupom PRIMARY KEY (id)
+	constraint pk_cupom primary key (id)
  );
 
-CREATE TABLE fornecedor ( 
+create table fornecedor ( 
 	id serial not null,
 	nome varchar(895) not null,
 	cnpj char(14) not null,
 	id_endereco integer not null,
-	CONSTRAINT pk_fornecedor PRIMARY KEY (id),
-	CONSTRAINT unq_fornecedor_cpnj UNIQUE (cnpj) ,
-	CONSTRAINT unq_fornecedor_id_endereco UNIQUE (id_endereco) 
+	constraint pk_fornecedor primary key (id),
+	constraint unq_fornecedor_cpnj unique (cnpj) ,
+	constraint unq_fornecedor_id_endereco unique (id_endereco) 
  );
 
-ALTER TABLE fornecedor ADD CONSTRAINT fk_fornecedor_endereco FOREIGN KEY ( id_endereco ) REFERENCES endereco( id );
+alter table fornecedor add constraint fk_fornecedor_endereco foreign key (id_endereco) references endereco(id);
 
-CREATE TABLE estoque ( 
+create table estoque ( 
 	id serial not null,
 	id_endereco integer not null,
-	CONSTRAINT pk_estoque PRIMARY KEY (id),
-	CONSTRAINT idx_estoque UNIQUE (id_endereco) 
+	constraint pk_estoque primary key (id),
+	constraint idx_estoque unique (id_endereco) 
  );
 
-ALTER TABLE estoque ADD CONSTRAINT fk_estoque_endereco FOREIGN KEY (id_endereco) REFERENCES endereco(id);
+alter table estoque add constraint fk_estoque_endereco foreign key (id_endereco) references endereco(id);
 
 CREATE TABLE produto_estoque ( 
-	id_estoque integer  NOT NULL  ,
-	id_produto integer  NOT NULL  ,
-	quantidade integer  NOT NULL  ,
-	CONSTRAINT pk_produto_estoque PRIMARY KEY (id_estoque, id_produto)
+	id_estoque integer not null,
+	id_produto integer not null,
+	quantidade integer not null,
+	constraint pk_produto_estoque primary key (id_estoque, id_produto)
  );
 
-ALTER TABLE produto_estoque ADD CONSTRAINT fk_produto_estoque_estoque FOREIGN KEY (id_estoque) REFERENCES estoque(id);
+alter table produto_estoque add constraint fk_produto_estoque_estoque foreign key (id_estoque) references estoque(id);
 
-ALTER TABLE produto_estoque ADD CONSTRAINT fk_produto_estoque_produto FOREIGN KEY (id_produto) REFERENCES produto(id);
+alter table produto_estoque add constraint fk_produto_estoque_produto foreign key (id_produto) references produto(id);
 
 
 
