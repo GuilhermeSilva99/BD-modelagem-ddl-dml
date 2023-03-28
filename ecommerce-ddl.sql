@@ -91,6 +91,19 @@ create table item_pedido(
     foreign key(id_produto) references produto
 );
 
+create table carrinho ( 
+	id_produto integer not null,
+	id_cliente integer not null,
+	quantidade integer not null,
+	data_insercao timestamp not null,
+	constraint pk_carrinho primary key (id_produto, id_cliente)
+ );
+
+alter table carrinho add constraint fk_carrinho_produto foreign key (id_produto) references produto(id);
+
+alter table carrinho add constraint fk_carrinho_cliente foreign key (id_cliente) references cliente(id);
+
+
 create table estoque ( 
 	id serial not null,
 	id_endereco integer not null,
@@ -110,12 +123,6 @@ create table produto_estoque (
 alter table produto_estoque add constraint fk_produto_estoque_estoque foreign key (id_estoque) references estoque(id);
 
 alter table produto_estoque add constraint fk_produto_estoque_produto foreign key (id_produto) references produto(id);
-
-
-
-
-
-
 
 
 
