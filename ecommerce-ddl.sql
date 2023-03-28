@@ -4,18 +4,6 @@ create schema ecommerce926;
 
 set search_path to ecommerce926;
 
-create table produto(
-	id serial,
-	descricao varchar(1000) not null,
-	codigo_barras varchar(44) not null,
-	valor numeric not null
-);
-
-alter table produto add constraint pk_produto primary key(id);
-
-alter table produto add constraint 
-	uk_produto_codigo_barras unique(codigo_barras);
-
 create table endereco(
 	id serial,
 	cep char(8) not null,
@@ -59,16 +47,6 @@ create table pedido (
     foreign key(id_cliente) references cliente
 );
 
-create table item_pedido(
-    id_pedido int not null,
-    id_produto int not null,
-    quantidade int not null,
-    valor numeric not null,
-    primary key(id_pedido, id_produto),
-    foreign key(id_pedido) references pedido(id),
-    foreign key(id_produto) references produto
-);
-
 create table cupom ( 
 	id serial not null,
 	data_inicio timestamp not null,
@@ -90,6 +68,29 @@ create table fornecedor (
 
 alter table fornecedor add constraint fk_fornecedor_endereco foreign key (id_endereco) references endereco(id);
 
+create table produto ( 
+	id serial not null,
+	descricao varchar(1000) not null,
+	codigo_barras varchar(44) not null,
+	valor numeric not null,
+	id_fornecedor integer not null,
+	constraint pk_produto primary key (id),
+	constraint unq_produto_codigo_barras unique (codigo_barras),
+	constraint unq_produto_id_fornecedor unique (id_fornecedor) 
+ );
+
+alter table produto add constraint fk_produto_fornecedor foreign key (id_fornecedor) references fornecedor(id);
+
+create table item_pedido(
+    id_pedido int not null,
+    id_produto int not null,
+    quantidade int not null,
+    valor numeric not null,
+    primary key(id_pedido, id_produto),
+    foreign key(id_pedido) references pedido(id),
+    foreign key(id_produto) references produto
+);
+
 create table estoque ( 
 	id serial not null,
 	id_endereco integer not null,
@@ -99,7 +100,7 @@ create table estoque (
 
 alter table estoque add constraint fk_estoque_endereco foreign key (id_endereco) references endereco(id);
 
-CREATE TABLE produto_estoque ( 
+create table produto_estoque ( 
 	id_estoque integer not null,
 	id_produto integer not null,
 	quantidade integer not null,
