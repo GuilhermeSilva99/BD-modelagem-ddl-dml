@@ -37,16 +37,6 @@ alter table cliente
 alter table cliente 
 	add foreign key (id_endereco) references endereco(id);
 
-create table pedido (
-    id serial primary key,
-    previsao_entrega date not null,
-    meio_pagamento varchar(200) not null,
-    status varchar(100) not null,
-    id_cliente int not null,
-    data_criacao timestamp not null,
-    foreign key(id_cliente) references cliente
-);
-
 create table cupom ( 
 	id serial not null,
 	data_inicio timestamp not null,
@@ -55,6 +45,18 @@ create table cupom (
 	descricao varchar(1000) not null,
 	constraint pk_cupom primary key (id)
  );
+
+create table pedido (
+    id serial primary key,
+    previsao_entrega date not null,
+    meio_pagamento varchar(200) not null,
+    status varchar(100) not null,
+    id_cliente int not null,
+    id_cupom int,
+    data_criacao timestamp not null,
+    foreign key(id_cliente) references cliente,
+    foreign key(id_cupom) references cupom (id)
+);
 
 create table fornecedor ( 
 	id serial not null,
@@ -123,9 +125,3 @@ create table produto_estoque (
 alter table produto_estoque add constraint fk_produto_estoque_estoque foreign key (id_estoque) references estoque(id);
 
 alter table produto_estoque add constraint fk_produto_estoque_produto foreign key (id_produto) references produto(id);
-
-
-
-
-
-
