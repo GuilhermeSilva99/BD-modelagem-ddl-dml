@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="ecommerce-turma-926" id="Project-850" database="PostgreSQL" >
 	<schema name="ecommerce-turma-926" >
-		<table name="carrinho" prior="tbl_0" >
-			<column name="id_produto" type="integer" jt="4" mandatory="y" />
-			<column name="id_cliente" type="integer" jt="4" mandatory="y" />
-			<column name="quantidade" type="integer" jt="4" mandatory="y" />
-			<column name="data_insercao" type="timestamp" jt="93" mandatory="y" />
-			<index name="pk_carrinho" unique="PRIMARY_KEY" >
-				<column name="id_produto" />
-				<column name="id_cliente" />
-			</index>
-			<fk name="fk_carrinho_produto" to_schema="ecommerce-turma-926" to_table="produto" >
-				<fk_column name="id_produto" pk="id" />
-			</fk>
-			<fk name="fk_carrinho_cliente" to_schema="ecommerce-turma-926" to_table="cliente" >
-				<fk_column name="id_cliente" pk="id" />
-			</fk>
-		</table>
 		<table name="cliente" prior="tbl" >
 			<column name="id" type="serial" jt="4" mandatory="y" />
 			<column name="nome" type="varchar" length="895" jt="12" mandatory="y" />
@@ -164,16 +148,15 @@
 	</schema>
 	<connector name="MyDb" database="MySql" host="localhost" port="3306" user="root" useSystemProxy="false" />
 	<layout name="Default Layout" id="Layout-7a5" show_column_type="y" show_relation="columns" >
-		<entity schema="ecommerce-turma-926" name="carrinho" color="C1D8EE" x="480" y="512" />
-		<entity schema="ecommerce-turma-926" name="cliente" color="3986C1" x="128" y="224" />
-		<entity schema="ecommerce-turma-926" name="cupom" color="C1D8EE" x="1248" y="208" />
-		<entity schema="ecommerce-turma-926" name="endereco" color="C1D8EE" x="80" y="448" />
+		<entity schema="ecommerce-turma-926" name="cliente" color="3986C1" x="240" y="176" />
+		<entity schema="ecommerce-turma-926" name="cupom" color="C1D8EE" x="1024" y="192" />
+		<entity schema="ecommerce-turma-926" name="endereco" color="C1D8EE" x="176" y="432" />
 		<entity schema="ecommerce-turma-926" name="estoque" color="C1D8EE" x="144" y="928" />
-		<entity schema="ecommerce-turma-926" name="fornecedor" color="C1D8EE" x="256" y="768" />
-		<entity schema="ecommerce-turma-926" name="item_pedido" color="C1D8EE" x="944" y="512" />
-		<entity schema="ecommerce-turma-926" name="pedido" color="C1D8EE" x="864" y="192" />
-		<entity schema="ecommerce-turma-926" name="produto" color="C1D8EE" x="880" y="752" />
-		<entity schema="ecommerce-turma-926" name="produto_estoque" color="C1D8EE" x="1440" y="800" />
+		<entity schema="ecommerce-turma-926" name="fornecedor" color="C1D8EE" x="288" y="752" />
+		<entity schema="ecommerce-turma-926" name="item_pedido" color="C1D8EE" x="608" y="464" />
+		<entity schema="ecommerce-turma-926" name="pedido" color="C1D8EE" x="640" y="192" />
+		<entity schema="ecommerce-turma-926" name="produto" color="C1D8EE" x="624" y="752" />
+		<entity schema="ecommerce-turma-926" name="produto_estoque" color="C1D8EE" x="1088" y="752" />
 		<callout x="48" y="48" pointer="Round" >
 			<comment><![CDATA[This is a layout - a diagram with tools.
 - Right-click the layout to create new tables. 
@@ -182,20 +165,6 @@
 - The schema will be saved to the model file. 
 - Later, you can connect to any database and deploy the schema into the database.]]></comment>
 		</callout>
-		<script name="carrinho" id="Editor-6e" language="SQL" >
-			<string><![CDATA[CREATE  TABLE "ecommerce-turma-926".carrinho ( 
-	id_produto           integer  NOT NULL  ,
-	id_cliente           integer  NOT NULL  ,
-	quantidade           integer  NOT NULL  ,
-	data_insercao        timestamp  NOT NULL  ,
-	CONSTRAINT pk_carrinho PRIMARY KEY ( id_produto, id_cliente )
- );
-
-ALTER TABLE "ecommerce-turma-926".carrinho ADD CONSTRAINT fk_carrinho_produto FOREIGN KEY ( id_produto ) REFERENCES "ecommerce-turma-926".produto( id );
-
-ALTER TABLE "ecommerce-turma-926".carrinho ADD CONSTRAINT fk_carrinho_cliente FOREIGN KEY ( id_cliente ) REFERENCES "ecommerce-turma-926".cliente( id );
-]]></string>
-		</script>
 		<script name="cupom" id="Editor-1a10" language="SQL" >
 			<string><![CDATA[CREATE  TABLE cupom ( 
 	id                   serial  NOT NULL  ,
